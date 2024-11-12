@@ -187,4 +187,12 @@ return {
       }
     end,
   },
+  {
+    'kkoomen/vim-doge',
+    build = ':call doge#install()',
+    ft = 'python',
+    config = function()
+      vim.g.doge_doc_standard_python = 'google'
+    end,
+  },
 }
