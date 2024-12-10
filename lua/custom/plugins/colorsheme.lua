@@ -106,7 +106,7 @@ return {
             errors = { 'undercurl' },
             hints = { 'undercurl' },
             warnings = { 'undercurl' },
-            information = { 'undercurl' },
+            information = { 'underline' },
           },
         },
         navic = { enabled = true, custom_bg = 'lualine' },
@@ -162,6 +162,9 @@ return {
             DiagnosticVirtualTextInfo = {
               bg = colours.background,
               fg = util.darken(colours.blue, 0.3),
+            },
+            DiagnosticUnderlineInfo = {
+              sp = util.darken(colours.blue, 0.3),
             },
             DiagnosticVirtualTextHint = {
               fg = colours.teal,
