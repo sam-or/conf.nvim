@@ -160,8 +160,8 @@ return {
               bg = util.darken(colours.yellow, 0.5),
             },
             DiagnosticVirtualTextInfo = {
-              fg = colours.sky,
-              bg = util.darken(colours.sky, 0.5),
+              bg = colours.background,
+              fg = util.darken(colours.blue, 0.3),
             },
             DiagnosticVirtualTextHint = {
               fg = colours.teal,
