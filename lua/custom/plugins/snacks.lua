@@ -18,6 +18,7 @@ return {
           wo = { wrap = true }, -- Wrap notifications
         },
       },
+      indent = { enabled = true },
     },
     keys = {
       {
