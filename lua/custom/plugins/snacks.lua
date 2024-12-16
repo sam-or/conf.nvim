@@ -77,13 +77,6 @@ return {
         desc = 'Rename File',
       },
       {
-        '<c-/>',
-        function()
-          Snacks.terminal()
-        end,
-        desc = 'Toggle Terminal',
-      },
-      {
         '<c-_>',
         function()
           Snacks.terminal()
@@ -91,14 +84,14 @@ return {
         desc = 'which_key_ignore',
       },
       {
-        ']]',
+        ']r',
         function()
           Snacks.words.jump(vim.v.count1)
         end,
         desc = 'Next Reference',
       },
       {
-        '[[',
+        '[r',
         function()
           Snacks.words.jump(-vim.v.count1)
         end,
