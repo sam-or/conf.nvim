@@ -916,12 +916,25 @@ require('lazy').setup({
       -- highhlight trailing spaces
       require('mini.trailspace').setup()
 
+      -- Git stuff
+      require('mini.diff').setup()
+
       -- format arguments
       require('mini.splitjoin').setup()
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
+    keys = {
+      {
+        '<leader>go',
+        function()
+          require('mini.diff').toggle_overlay()
+        end,
+        mode = { 'n' },
+        desc = 'Toggle [g]it [o]verlay',
+      },
+    },
   },
   {
     'nvim-lualine/lualine.nvim',
