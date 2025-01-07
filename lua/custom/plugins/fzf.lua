@@ -6,7 +6,7 @@ return {
     opts = {},
     config = function()
       local fzf_lua = require 'fzf-lua'
-      fzf_lua.setup()
+      fzf_lua.setup { files = { formatter = 'path.dirname_first' } }
       vim.keymap.set('n', '<C-p>', fzf_lua.files, { desc = 'Find files' })
       vim.keymap.set('i', '<C-p>', fzf_lua.files, { desc = 'Find files' })
       vim.keymap.set('n', '<C-g>', fzf_lua.live_grep_glob, { desc = 'Grep' })
