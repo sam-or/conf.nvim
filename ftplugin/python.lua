@@ -1,10 +1,10 @@
 local function add_f_to_string()
   vim.api.nvim_feedkeys('{', 'n', true)
+
   local add_f = function(node)
-    local sr, sc, er, ec = node:range()
+    local sr, sc, er, _ = node:range()
     local string_start_content = vim.treesitter.get_node_text(node, 0)
     if not string.find(string_start_content, 'f') then
-      vim.print "f'd the string"
       vim.api.nvim_buf_set_text(0, sr, sc, er, sc, { 'f' })
     end
   end
@@ -17,7 +17,6 @@ local function add_f_to_string()
   if not current_node then
     return
   end
-  Snacks.debug.inspect(current_node:type(), current_node:parent():type(), current_node:parent():parent():type(), current_node:parent():parent():parent():type())
 
   if current_node:type() == 'string_start' then
     add_f(current_node)

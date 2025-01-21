@@ -2,6 +2,7 @@ return {
   {
     'ibhagwan/fzf-lua',
     -- optional for icon support
+    enabled = false,
     dependencies = { 'echasnovski/mini.icons' },
     opts = {},
     config = function()
