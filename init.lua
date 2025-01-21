@@ -443,8 +443,6 @@ require('lazy').setup({
 
       -- Allows extra capabilities provided by blink.cmp
       'saghen/blink.cmp',
-
-      'ibhagwan/fzf-lua',
     },
     config = function()
       -- Brief aside: **What is LSP?**
@@ -492,32 +490,32 @@ require('lazy').setup({
           -- Jump to the definition of the word under your cursor.
           --  This is where a variable was first declared, or where a function is defined, etc.
           --  To jump back, press <C-t>.
-          local fzf_lua = require 'fzf-lua'
-          map('gd', function()
-            fzf_lua.lsp_definitions { jump_to_single_result = true, cwd_only = false }
-          end, '[G]oto [D]efinition')
-
-          -- Find references for the word under your cursor.
-          map('gr', fzf_lua.lsp_references, '[G]oto [R]eferences')
-
-          -- Jump to the implementation of the word under your cursor.
-          --  Useful when your language has ways of declaring types without an actual implementation.
-          map('gI', fzf_lua.lsp_implementations, '[G]oto [I]mplementation')
-
-          -- Jump to the type of the word under your cursor.
-          --  Useful when you're not sure what type a variable is and you want to see
-          --  the definition of its *type*, not where it was *defined*.
-          map('gD', function()
-            fzf_lua.lsp_typedefs { jump_to_single_result = true, cwd_only = false }
-          end, 'Type [D]efinition')
-
-          -- Fuzzy find all the symbols in your current document.
-          --  Symbols are things like variables, functions, types, etc.
-          map('<leader>ds', fzf_lua.lsp_document_symbols, '[D]ocument [S]ymbols')
-
-          -- Fuzzy find all the symbols in your current workspace.
-          --  Similar to document symbols, except searches over your entire project.
-          map('<leader>ws', fzf_lua.lsp_live_workspace_symbols, '[W]orkspace [S]ymbols')
+          -- local fzf_lua = require 'fzf-lua'
+          -- map('gd', function()
+          --   fzf_lua.lsp_definitions { jump_to_single_result = true, cwd_only = false }
+          -- end, '[G]oto [D]efinition')
+          --
+          -- -- Find references for the word under your cursor.
+          -- map('gr', fzf_lua.lsp_references, '[G]oto [R]eferences')
+          --
+          -- -- Jump to the implementation of the word under your cursor.
+          -- --  Useful when your language has ways of declaring types without an actual implementation.
+          -- map('gI', fzf_lua.lsp_implementations, '[G]oto [I]mplementation')
+          --
+          -- -- Jump to the type of the word under your cursor.
+          -- --  Useful when you're not sure what type a variable is and you want to see
+          -- --  the definition of its *type*, not where it was *defined*.
+          -- map('gD', function()
+          --   fzf_lua.lsp_typedefs { jump_to_single_result = true, cwd_only = false }
+          -- end, 'Type [D]efinition')
+          --
+          -- -- Fuzzy find all the symbols in your current document.
+          -- --  Symbols are things like variables, functions, types, etc.
+          -- map('<leader>ds', fzf_lua.lsp_document_symbols, '[D]ocument [S]ymbols')
+          --
+          -- -- Fuzzy find all the symbols in your current workspace.
+          -- --  Similar to document symbols, except searches over your entire project.
+          -- map('<leader>ws', fzf_lua.lsp_live_workspace_symbols, '[W]orkspace [S]ymbols')
 
           -- Rename the variable under your cursor.
           --  Most Language Servers support renaming across files, etc.
