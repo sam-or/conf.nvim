@@ -8,6 +8,19 @@ local function add_f_to_string()
       vim.api.nvim_buf_set_text(0, sr, sc, er, sc, { 'f' })
     end
   end
+  local function find_string_start(node)
+    for child in node:iter_children() do
+      if child:type() == 'string_start' then
+        return child
+      else
+        local child_result = find_string_start(child)
+        if child_result then
+          return child_result
+        end
+      end
+    end
+    return nil
+  end
 
   local r, c = unpack(vim.api.nvim_win_get_cursor(0))
   r = r - 1
@@ -17,7 +30,12 @@ local function add_f_to_string()
   if not current_node then
     return
   end
-
+  if current_node:type() == 'ERROR' then
+    local string_start_in_err = find_string_start(current_node)
+    if string_start_in_err then
+      add_f(string_start_in_err)
+    end
+  end
   if current_node:type() == 'string_start' then
     add_f(current_node)
   end
