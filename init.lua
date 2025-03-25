@@ -754,6 +754,7 @@ require('lazy').setup({
 
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
+    event = 'VeryLazy',
     config = function()
       -- Better Around/Inside textobjects
       --
@@ -769,8 +770,13 @@ require('lazy').setup({
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
-      -- highhlight trailing spaces
-      require('mini.trailspace').setup()
+      -- highlight trailing spaces (we do this very lazily so that it won't highligh on snacks dashboard
+      vim.api.nvim_create_autocmd('User', {
+        pattern = 'VeryLazy',
+        callback = function()
+          require('mini.trailspace').setup()
+        end,
+      })
 
       -- Git stuff
       require('mini.diff').setup()

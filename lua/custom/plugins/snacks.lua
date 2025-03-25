@@ -23,6 +23,14 @@ return {
       picker = {
         layout = 'default',
       },
+      dashboard = {
+        row = 0,
+        sections = {
+          { section = 'terminal', cmd = '/bin/bash ' .. vim.fn.stdpath 'config' .. '/thisisfine.sh; sleep .1', height = 26, padding = 2 },
+          { icon = ' ', title = 'Recent Files', section = 'recent_files', indent = 2, padding = 1 },
+          { icon = ' ', title = 'Projects', section = 'projects', indent = 2, padding = 1 },
+        },
+      },
     },
     keys = {
       -- picker
