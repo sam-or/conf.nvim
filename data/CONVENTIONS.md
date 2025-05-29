@@ -5,3 +5,4 @@ When editing code, adhere to these principles:
 - Follow any convetions and style present in the existing code in the code you write and change.
 - Do not over explain the changes. Comments in the code you write should be rare.
 - Do not over explain to the user what has been changed and why, only explain changes if it is extremely necessary.
+- If asked if there are and shell commands to run, never reply with a shell comment. If there are no commands, simply say nothing.
