@@ -19,6 +19,9 @@ return {
     opts = {
       args = {
         '--no-verify-ssl',
+        '--watch-files',
+        '--read',
+        vim.fn.expand(vim.fn.stdpath 'config' .. '/data/CONVENTIONS.md'),
       },
     },
     dependencies = {
