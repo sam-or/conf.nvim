@@ -140,6 +140,117 @@ local function insert_print_statement()
   -- Move the cursor to the next line
   vim.api.nvim_win_set_cursor(0, { row + 1, 0 })
 end
+-- Recursively collect local variable names in the current function scope
+local function get_function_args_and_locals(node, bufnr)
+  local args = {}
+  local locals = {}
+
+  -- Traverse up to find the function definition
+  while node and node:type() ~= 'function_definition' and node:type() ~= 'lambda' do
+    node = node:parent()
+  end
+
+  if node then
+    -- Get function arguments
+    for child in node:iter_children() do
+      if child:type() == 'parameters' then
+        for param in child:iter_children() do
+          if param:type() == 'identifier' then
+            local name = vim.treesitter.get_node_text(param, bufnr)
+            args[name] = true
+          end
+        end
+      end
+    end
+
+    -- Recursively collect local variables (simple assignment targets)
+    local function collect_locals(n)
+      if n:type() == 'assignment' then
+        local target = n:child(0)
+        if target and target:type() == 'identifier' then
+          local name = vim.treesitter.get_node_text(target, bufnr)
+          locals[name] = true
+        end
+      end
+      for i = 0, n:child_count() - 1 do
+        collect_locals(n:child(i))
+      end
+    end
+    collect_locals(node)
+  end
+
+  return args, locals
+end
+
+local function insert_func_params_with_locals()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local win = vim.api.nvim_get_current_win()
+  local row, col = unpack(vim.api.nvim_win_get_cursor(win))
+  row = row - 1 -- 0-based
+
+  -- Get the line up to the cursor
+  local line = vim.api.nvim_buf_get_lines(bufnr, row, row + 1, false)[1]
+  local before_cursor = line:sub(1, col)
+
+  -- Find the function/class name before the cursor (handles dotted names)
+  local name = before_cursor:match '([%w_%.]+)%s*%($'
+  if not name then
+    vim.notify('No function/class call detected before cursor', vim.log.levels.WARN)
+    return
+  end
+
+  -- Prepare params for LSP signature help
+  local params = vim.lsp.util.make_position_params()
+  -- Request signature help from LSP
+  vim.lsp.buf_request_all(bufnr, 'textDocument/signatureHelp', params, function(results)
+    for _, result in pairs(results) do
+      local sig = result.result
+      if sig and sig.signatures and sig.signatures[1] then
+        local label = sig.signatures[1].label
+        -- Extract parameter list from the label
+        local param_str = label:match '%((.*)%)'
+        if not param_str then
+          vim.notify('Could not parse signature label: ' .. label, vim.log.levels.WARN)
+          return
+        end
+
+        -- Find the call node at the cursor for scope analysis
+        local root = vim.treesitter.get_parser(bufnr, 'python'):parse()[1]:root()
+        local node = root:descendant_for_range(row, col, row, col)
+        while node and node:type() ~= 'call' do
+          node = node:parent()
+        end
+
+        local args, locals = get_function_args_and_locals(node, bufnr)
+
+        -- Split parameters, handle default values and *args/**kwargs
+        local params_out = {}
+        for param in param_str:gmatch '[^,]+' do
+          local pname = param:match '^%s*([%w_]+)'
+          if pname and pname ~= 'self' and pname ~= 'cls' then
+            if args[pname] or locals[pname] then
+              table.insert(params_out, pname .. '=' .. pname)
+            else
+              table.insert(params_out, pname .. '=...')
+            end
+          end
+        end
+
+        -- Insert at cursor
+        if #params_out > 0 then
+          local to_insert = table.concat(params_out, ', ')
+          vim.api.nvim_put({ to_insert }, 'c', false, true)
+        else
+          vim.notify('No parameters found', vim.log.levels.INFO)
+        end
+        return
+      end
+    end
+    vim.notify('No signature help available', vim.log.levels.WARN)
+  end)
+end
+
+vim.keymap.set('i', '<C-i>', insert_func_params_with_locals, { buffer = true, desc = 'Insert function/class parameters' })
 
 -- Keys
 vim.keymap.set('i', '{', add_f_to_string, { buffer = true })
