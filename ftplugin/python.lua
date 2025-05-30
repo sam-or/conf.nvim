@@ -249,6 +249,123 @@ local function insert_func_params_with_locals()
     vim.notify('No signature help available', vim.log.levels.WARN)
   end)
 end
+local function add_missing_kwarg_names()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local win = vim.api.nvim_get_current_win()
+  local row, col = unpack(vim.api.nvim_win_get_cursor(win))
+  row = row - 1 -- 0-based
+
+  -- Find the call node at the cursor
+  local parser = vim.treesitter.get_parser(bufnr, 'python')
+  local root = parser:parse()[1]:root()
+  local node = root:descendant_for_range(row, col, row, col)
+  while node and node:type() ~= 'call' do
+    node = node:parent()
+  end
+  if not node then
+    vim.notify('No function/class call found at cursor', vim.log.levels.WARN)
+    return
+  end
+
+  -- Get the function/class name text
+  local function get_func_name(n)
+    -- For call: (function ( arguments ))
+    local child = n:child(0)
+    if child:type() == 'attribute' then
+      -- e.g. foo.bar()
+      return vim.treesitter.get_node_text(child, bufnr)
+    elseif child:type() == 'identifier' then
+      return vim.treesitter.get_node_text(child, bufnr)
+    elseif child:type() == 'call' then
+      return get_func_name(child)
+    end
+    return nil
+  end
+
+  local func_name = get_func_name(node)
+  if not func_name then
+    vim.notify('Could not determine function/class name', vim.log.levels.WARN)
+    return
+  end
+
+  -- Get argument nodes
+  local arglist_node = node:field('arguments')[1]
+  if not arglist_node then
+    vim.notify('No arguments found in call', vim.log.levels.WARN)
+    return
+  end
+
+  -- Gather argument nodes and their text
+  local args = {}
+  for i = 0, arglist_node:child_count() - 1 do
+    local arg = arglist_node:child(i)
+    -- skip commas
+    if arg:type() ~= ',' then
+      table.insert(args, { node = arg, text = vim.treesitter.get_node_text(arg, bufnr) })
+    end
+  end
+
+  -- Use LSP to get the parameter names
+  local params = vim.lsp.util.make_position_params()
+  vim.lsp.buf_request_all(bufnr, 'textDocument/signatureHelp', params, function(results)
+    for _, result in pairs(results) do
+      local sig = result.result
+      if sig and sig.signatures and sig.signatures[1] then
+        local label = sig.signatures[1].label
+        -- Extract parameter list from the signature label
+        local param_str = label:match '%((.*)%)'
+        if not param_str then
+          vim.notify('Could not parse signature label: ' .. label, vim.log.levels.WARN)
+          return
+        end
+
+        -- Split parameters, handle default values and *args/**kwargs
+        local param_names = {}
+        for param in vim.split(param_str, ',', true) do
+          -- Remove type annotations and default values
+          local pname = param:match '^%s*([%w_]+)'
+          if pname and pname ~= 'self' and pname ~= 'cls' then
+            table.insert(param_names, pname)
+          end
+        end
+
+        -- For each argument, check if it already has a keyword
+        local new_args = {}
+        local arg_idx = 1
+        for i, param_name in ipairs(param_names) do
+          local arg = args[arg_idx]
+          if not arg then
+            break
+          end
+          local is_kw = arg.text:find '^%s*[%w_]+%s*='
+          if is_kw then
+            table.insert(new_args, arg.text)
+          else
+            table.insert(new_args, param_name .. '=' .. arg.text)
+          end
+          arg_idx = arg_idx + 1
+        end
+
+        -- If there are remaining arguments (e.g. kwargs), just append them as is
+        for i = arg_idx, #args do
+          table.insert(new_args, args[i].text)
+        end
+
+        -- Replace the argument list in the buffer
+        local start_row, start_col, end_row, end_col = arglist_node:range()
+        local before = vim.api.nvim_buf_get_lines(bufnr, start_row, start_row + 1, false)[1]:sub(1, start_col)
+        local after = vim.api.nvim_buf_get_lines(bufnr, end_row, end_row + 1, false)[1]:sub(end_col + 1)
+        local replacement = before .. table.concat(new_args, ', ') .. after
+        vim.api.nvim_buf_set_lines(bufnr, start_row, start_row + 1, false, { replacement })
+
+        -- Move cursor to after the argument list
+        vim.api.nvim_win_set_cursor(win, { end_row + 1, end_col })
+        return
+      end
+    end
+    vim.notify('No signature help available', vim.log.levels.WARN)
+  end)
+end
 
 vim.keymap.set('i', '<C-i>', insert_func_params_with_locals, { buffer = true, desc = 'Insert function/class parameters' })
 
