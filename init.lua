@@ -786,10 +786,28 @@ require('lazy').setup({
     'nvim-lualine/lualine.nvim',
     opts = {
       options = {
-        icons_enabled = false,
+        icons_enabled = true,
         theme = 'catppuccin',
         component_separators = '|',
         section_separators = '',
+        disabled_filetypes = {
+          statusline = {
+            'dap-repl',
+            'dapui_breakpoints',
+            'dapui_console',
+            'dapui_scopes',
+            'dapui_watches',
+            'dapui_stacks',
+          },
+          winbar = {
+            'dap-repl',
+            'dapui_breakpoints',
+            'dapui_console',
+            'dapui_scopes',
+            'dapui_watches',
+            'dapui_stacks',
+          },
+        },
       },
       sections = {
         lualine_a = { 'mode' },
