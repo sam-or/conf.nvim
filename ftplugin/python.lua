@@ -367,9 +367,51 @@ local function add_missing_kwarg_names()
   end)
 end
 
-vim.keymap.set('i', '<C-i>', insert_func_params_with_locals, { buffer = true, desc = 'Insert function/class parameters' })
+function insert_inlay_hints()
+  -- Get the current buffer
+  local buf = vim.api.nvim_get_current_buf()
+
+  local range
+  if vim.tbl_contains({ 'v', 'V', '\22' }, vim.fn.mode()) then
+    local s_pos = vim.fn.getpos 'v'
+    local e_pos = vim.fn.getpos '.'
+
+    local s_row, s_col = s_pos[2], s_pos[3]
+    local e_row, e_col = e_pos[2], e_pos[3]
+
+    if s_row > e_row or (s_row == e_row and s_col > e_col) then
+      s_row, e_row = e_row, s_row
+      s_col, e_col = e_col, s_col
+    end
+
+    range = {
+      start = { line = s_row - 1, character = 0 },
+      ['end'] = { line = e_row + 1, character = 0 },
+    }
+  else
+    local current_line, _ = unpack(vim.api.nvim_win_get_cursor(0))
+    range = {
+      start = { line = current_line - 1, character = 0 },
+      ['end'] = { line = current_line, character = 0 },
+    }
+  end
+
+  vim.print(range)
+
+  local hints = vim.lsp.inlay_hint.get {
+    bufnr = 0, -- 0 for current buffer
+    range = range,
+  }
+  vim.print(hints)
+  for _, hint in pairs(hints) do
+    vim.lsp.util.apply_text_edits(hint.inlay_hint.textEdits, buf, 'utf-8')
+  end
+end
 
 -- Keys
-vim.keymap.set('i', '{', add_f_to_string, { buffer = true })
+vim.keymap.set('i', '{', add_f_to_string, { buffer = true, desc = 'Auto add f to string' })
 vim.api.nvim_create_user_command('InsertPyFuncPrintStatement', insert_print_statement, {})
-vim.keymap.set('n', '<leader>cp', ':InsertPyFuncPrintStatement<CR>', { desc = 'Insert Print Statement' })
+vim.keymap.set('n', '<leader>id', ':InsertPyFuncPrintStatement<CR>', { desc = '[I]nsert [D]ebug Statement' })
+vim.keymap.set('n', '<leader>ip', insert_func_params_with_locals, { buffer = true, desc = '[I]nsert function/class [p]arameters' })
+vim.keymap.set('n', '<leader>ih', insert_inlay_hints, { buffer = true, desc = '[I]nsert inlay [h]ints' })
+vim.keymap.set('v', '<leader>ih', insert_inlay_hints, { buffer = true, desc = '[I]nsert inlay [h]ints' })
