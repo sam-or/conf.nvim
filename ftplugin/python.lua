@@ -396,13 +396,10 @@ function insert_inlay_hints()
     }
   end
 
-  vim.print(range)
-
   local hints = vim.lsp.inlay_hint.get {
     bufnr = 0, -- 0 for current buffer
     range = range,
   }
-  vim.print(hints)
   for _, hint in pairs(hints) do
     vim.lsp.util.apply_text_edits(hint.inlay_hint.textEdits, buf, 'utf-8')
   end
