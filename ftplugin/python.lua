@@ -367,7 +367,7 @@ local function add_missing_kwarg_names()
   end)
 end
 
-function insert_inlay_hints()
+local function insert_inlay_hints()
   -- Get the current buffer
   local buf = vim.api.nvim_get_current_buf()
 
@@ -400,9 +400,12 @@ function insert_inlay_hints()
     bufnr = 0, -- 0 for current buffer
     range = range,
   }
-  text_edits = {}
+  local text_edits = {}
   for _, hint in pairs(hints) do
-    table.insert(text_edits, 1, hint.inlay_hint.textEdits)
+    for _, text_edit in pairs(hint.inlay_hint.textEdits) do
+      -- Prepend so then get applied in reverse order (fixes multiple edits on the same line
+      table.insert(text_edits, 1, text_edit)
+    end
   end
   vim.lsp.util.apply_text_edits(text_edits, buf, 'utf-8')
 end
