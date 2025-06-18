@@ -402,7 +402,7 @@ function insert_inlay_hints()
   }
   text_edits = {}
   for _, hint in pairs(hints) do
-    table.insert(text_edits, hint.inlay_hint.textEdits)
+    table.insert(text_edits, 1, hint.inlay_hint.textEdits)
   end
   vim.lsp.util.apply_text_edits(text_edits, buf, 'utf-8')
 end
