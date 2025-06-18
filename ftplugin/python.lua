@@ -400,9 +400,11 @@ function insert_inlay_hints()
     bufnr = 0, -- 0 for current buffer
     range = range,
   }
+  text_edits = {}
   for _, hint in pairs(hints) do
-    vim.lsp.util.apply_text_edits(hint.inlay_hint.textEdits, buf, 'utf-8')
+    table.insert(text_edits, hint.inlay_hint.textEdits)
   end
+  vim.lsp.util.apply_text_edits(text_edits, buf, 'utf-8')
 end
 
 -- Keys
