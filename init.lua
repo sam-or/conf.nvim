@@ -768,6 +768,9 @@ require('lazy').setup({
       -- format arguments
       require('mini.splitjoin').setup()
 
+      require('mini.jump2d').setup()
+      require('mini.jump').setup()
+
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
