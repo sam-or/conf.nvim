@@ -403,7 +403,7 @@ local function insert_inlay_hints()
   local text_edits = {}
   for _, hint in pairs(hints) do
     for _, text_edit in pairs(hint.inlay_hint.textEdits) do
-      -- Prepend so then get applied in reverse order (fixes multiple edits on the same line
+      -- Prepend so then get applied in reverse order (fixes multiple edits on the same line)
       table.insert(text_edits, 1, text_edit)
     end
   end
