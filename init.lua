@@ -781,7 +781,6 @@ require('lazy').setup({
 
       require('mini.jump2d').setup()
       vim.api.nvim_set_hl(0, 'MiniJump2dSpot', { bold = true, italic = true, reverse = false, bg = '#303347' })
-      require('mini.jump').setup()
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
