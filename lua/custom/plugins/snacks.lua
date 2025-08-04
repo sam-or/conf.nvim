@@ -296,7 +296,7 @@ return {
       {
         '<leader>o',
         function()
-          Snacks.picker.lsp_symbols()
+          Snacks.picker.lsp_symbols { layout = { preset = 'vscode', preview = 'main' } }
         end,
         desc = 'LSP Symbols',
       },
