@@ -130,6 +130,10 @@ return {
       highlight_overrides = {
         all = function(colours)
           local util = require 'catppuccin.utils.colors'
+          local keyword = { fg = colours.mauve }
+          local keyword_hl = { fg = colours.mauve, bg = util.darken(colours.mauve, 0.3) }
+          local func = { fg = colours.blue }
+          local type = { fg = util.lighten(colours.blue, 0.8), bg = util.darken(colours.blue, 0.3) }
           return {
             Comment = {
               fg = colours.overlay0,
@@ -151,6 +155,16 @@ return {
               fg = colours.teal,
               bg = util.darken(colours.teal, 0.2),
             },
+            Type = type,
+            ['@type.builtin'] = type,
+            Keyword = keyword,
+            ['@keyword.return'] = keyword_hl,
+            ['@keyword.function'] = keyword,
+            ['@keyword.import'] = keyword,
+            ['@keyword.conditional'] = keyword,
+            ['@keyword.repeat'] = keyword,
+            ['@keyword.exception'] = keyword,
+            Function = func,
             DiagnosticVirtualTextError = {
               fg = colours.red,
               bg = util.darken(colours.red, 0.4),
