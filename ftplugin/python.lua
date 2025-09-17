@@ -417,3 +417,6 @@ vim.keymap.set('n', '<leader>id', ':InsertPyFuncPrintStatement<CR>', { desc = '[
 vim.keymap.set('n', '<leader>ip', insert_func_params_with_locals, { buffer = true, desc = '[I]nsert function/class [p]arameters' })
 vim.keymap.set('n', '<leader>ih', insert_inlay_hints, { buffer = true, desc = '[I]nsert inlay [h]ints' })
 vim.keymap.set('v', '<leader>ih', insert_inlay_hints, { buffer = true, desc = '[I]nsert inlay [h]ints' })
+
+-- window config
+vim.opt_local.winborder = 'rounded'
