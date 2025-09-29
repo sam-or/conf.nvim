@@ -777,6 +777,9 @@ require('lazy').setup({
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
       },
     },
+    init = function()
+      require('conform').formatters.jq = { append_args = { '--indent', '4' } }
+    end,
   },
   {
     'saghen/blink.cmp',
