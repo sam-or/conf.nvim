@@ -184,6 +184,8 @@ return {
               fg = colours.teal,
               bg = util.darken(colours.teal, 0.5),
             },
+            WinSeparator = { fg = '#957CC6', bg = vim.api.nvim_get_hl(0, { name = 'Normal' }).bg },
+            WinBar = { fg = '#957CC6', bg = vim.api.nvim_get_hl(0, { name = 'Normal' }).bg },
           }
         end,
       },
