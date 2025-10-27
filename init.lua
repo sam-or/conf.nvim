@@ -444,6 +444,7 @@ require('lazy').setup({
 
       -- Allows extra capabilities provided by blink.cmp
       'saghen/blink.cmp',
+      'b0o/schemastore.nvim',
     },
     config = function()
       -- Brief aside: **What is LSP?**
@@ -613,6 +614,7 @@ require('lazy').setup({
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         basedpyright = {
+          root_markers = { '.git' },
           settings = {
             basedpyright = {
               analysis = {
@@ -695,6 +697,23 @@ require('lazy').setup({
             },
           },
           filetypes = tsserver_filetypes,
+        },
+        jsonls = {
+          settings = {
+            json = {
+              schemas = require('schemastore').json.schemas {
+                extra = {
+                  {
+                    description = 'YARP appsettings schema',
+                    fileMatch = { 'appsettings.json' },
+                    name = 'appsettings.json',
+                    url = 'https://raw.githubusercontent.com/dotnet/yarp/refs/heads/main/src/ReverseProxy/ConfigurationSchema.json',
+                  },
+                },
+              },
+              validate = { enable = true },
+            },
+          },
         },
       }
 
