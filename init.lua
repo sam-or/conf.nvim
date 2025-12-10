@@ -864,9 +864,6 @@ require('lazy').setup({
       -- format arguments
       require('mini.splitjoin').setup()
 
-      require('mini.jump2d').setup()
-      vim.api.nvim_set_hl(0, 'MiniJump2dSpot', { bold = true, italic = true, reverse = false, bg = '#303347' })
-
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
