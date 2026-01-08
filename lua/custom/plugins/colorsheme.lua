@@ -70,6 +70,7 @@ return {
         hl.Comment.bg = util.darken(hl.Comment.fg, 0.1)
         hl.Constant.bg = util.darken(hl.Constant.fg, 0.1)
         hl.String.bg = util.darken(hl.String.fg, 0.1)
+        hl[ [[@lsp.type.enumMember.python]] ] = { fg = hl.Constant.fg, bg = hl.Constant.bg }
       end,
     },
   },
@@ -120,15 +121,87 @@ return {
         treesitter_context = true,
         which_key = true,
       },
-      flavour = 'macchiato',
-      transparent_background = true,
+      flavour = 'frappe',
+      transparent_background = false,
       show_end_of_buffer = true,
       no_italic = false, -- Force no italic
       no_bold = false, -- Force no bold
       no_underline = false, -- Force no underline
+      color_overrides = {
+        frappe = { -- Koda-inspired Frappe palette
+          -- Accents / diagnostics
+          rosewater = '#ffffff', -- emphasis
+          flamingo = '#ffffff',
+          pink = '#ffffff',
+          mauve = '#777777', -- keywords
+          red = '#ff7676', -- danger
+          maroon = '#ff7676',
+          peach = '#d9ba73', -- warning / constants
+          yellow = '#d9ba73',
+          green = '#86cd82', -- success
+          teal = '#8ebeec', -- info
+          sky = '#8ebeec',
+          sapphire = '#8ebeec',
+          blue = '#8ebeec', -- highlight
+          lavender = '#ffffff',
 
+          -- Text
+          text = '#b0b0b0', -- main fg
+          subtext1 = '#8a8a8a',
+          subtext0 = '#777777',
+
+          -- UI overlays
+          overlay2 = '#4d4d4d', -- paren
+          overlay1 = '#50585d', -- comments
+          overlay0 = '#50585d',
+
+          -- Surfaces
+          surface2 = '#272727', -- lines
+          surface1 = '#313131',
+          surface0 = '#3a3a3a',
+
+          -- Backgrounds
+          base = '#101010', -- main bg
+          mantle = '#101010',
+          crust = '#0d0d0d',
+        },
+        koda = {
+          --   none        = "none",
+          --   bg_solid    = "#101010",
+          --   bg          = "#101010",
+          --   fg          = "#b0b0b0",
+          --   line        = "#272727",
+          --   paren       = "#4d4d4d",
+          --   keyword     = "#777777",
+          --   dim         = "#50585d",
+          --   comment     = "#50585d",
+          --   border      = "#ffffff",
+          --   emphasis    = "#ffffff",
+          --   func        = "#ffffff",
+          --   string      = "#ffffff",
+          --   const       = "#d9ba73",
+          --   highlight   = "#0058d0",
+          --   info        = "#8ebeec",
+          --   success     = "#86cd82",
+          --   warning     = "#d9ba73",
+          --   danger      = "#ff7676",
+          -- }
+        },
+      },
       highlight_overrides = {
-        all = function(colours)
+        frappe = function(colours)
+          local util = require 'catppuccin.utils.colors'
+          return {
+            String = { fg = colours.text },
+            Function = { fg = colours.text },
+            Operator = { fg = colours.subtext1 },
+            ['@string.documentation'] = { fg = colours.text },
+            ['@variable.parameter'] = { fg = colours.text },
+            ['@module'] = { fg = colours.text },
+            ['@lsp.type.enumMember'] = { fg = colours.text },
+          }
+        end,
+        macchiato = function(colours)
           local util = require 'catppuccin.utils.colors'
           local keyword = { fg = colours.mauve }
           local keyword_hl = { fg = colours.mauve, bg = util.darken(colours.mauve, 0.3) }
@@ -190,5 +263,14 @@ return {
         end,
       },
     },
+  },
+  {
+    'oskarnurm/koda.nvim',
+    lazy = false, -- make sure we load this during startup if it is your main colorscheme
+    priority = 1000, -- make sure to load this before all the other start plugins
+    config = function()
+      -- require("koda").setup({ transparent = true })
+      -- vim.cmd 'colorscheme koda'
+    end,
   },
 }
