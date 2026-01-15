@@ -176,6 +176,7 @@ return {
             BlinkCmpMenuBorder = { fg = colours.yellow },
             BlinkCmpLabel = { fg = colours.text },
             PmenuMatch = { fg = colours.yellow },
+            SnacksPickerPreviewCursorLine = { bg = colours.surface2 },
             ['@string.documentation'] = { fg = colours.text },
             ['@variable.parameter'] = { fg = colours.text },
             ['@module'] = { fg = colours.text },
