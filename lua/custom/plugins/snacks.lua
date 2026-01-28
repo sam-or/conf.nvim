@@ -22,6 +22,7 @@ return {
 
       picker = {
         layout = 'default',
+        previewers = { diff = { cmd = { 'delta' } } },
       },
       dashboard = {
         row = 0,

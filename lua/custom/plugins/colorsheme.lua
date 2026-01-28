@@ -169,18 +169,19 @@ return {
         frappe = function(colours)
           local util = require 'catppuccin.utils.colors'
           return {
-            String = { fg = colours.text },
+            BlinkCmpLabel = { fg = colours.text },
+            BlinkCmpMenuBorder = { fg = colours.yellow },
+            BlinkCmpMenuSelection = { bg = colours.surface0 },
+            Delimiter = { fg = colours.text },
             Function = { fg = colours.text },
             Operator = { fg = colours.subtext1 },
-            BlinkCmpMenuSelection = { bg = colours.surface0 },
-            BlinkCmpMenuBorder = { fg = colours.yellow },
-            BlinkCmpLabel = { fg = colours.text },
             PmenuMatch = { fg = colours.yellow },
             SnacksPickerPreviewCursorLine = { bg = colours.surface2 },
+            String = { fg = colours.text },
+            ['@lsp.type.enumMember'] = { fg = colours.text },
+            ['@module'] = { fg = colours.text },
             ['@string.documentation'] = { fg = colours.text },
             ['@variable.parameter'] = { fg = colours.text },
-            ['@module'] = { fg = colours.text },
-            ['@lsp.type.enumMember'] = { fg = colours.text },
           }
         end,
         macchiato = function(colours)
