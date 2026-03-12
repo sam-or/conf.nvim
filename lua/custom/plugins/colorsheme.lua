@@ -78,11 +78,12 @@ return {
     'catppuccin/nvim',
     lazy = true,
     name = 'catppuccin',
+    enabled = true,
 
     init = function()
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
-      -- vim.cmd.colorscheme 'catppuccin'
+      vim.cmd.colorscheme 'catppuccin'
     end,
     opts = {
       auto_integratins = true,
@@ -98,8 +99,8 @@ return {
           },
         },
       },
-      -- flavour = 'frappe',
-      flavour = 'macchiato',
+      flavour = 'frappe',
+      -- flavour = 'macchiato',
       transparent_background = false,
       show_end_of_buffer = true,
       no_italic = false, -- Force no italic
@@ -252,9 +253,10 @@ return {
     'oskarnurm/koda.nvim',
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
+    enabled = false,
     config = function()
       -- require("koda").setup({ transparent = true })
-      vim.cmd 'colorscheme koda'
+      -- vim.cmd 'colorscheme koda'
     end,
   },
 }
