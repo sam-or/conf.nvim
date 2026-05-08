@@ -114,9 +114,7 @@ vim.opt.showmode = false
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.schedule(function()
-  vim.opt.clipboard = 'unnamedplus'
-end)
+vim.schedule(function() vim.opt.clipboard = 'unnamedplus' end)
 
 -- Enable break indent
 vim.opt.breakindent = true
@@ -254,9 +252,6 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
--- C-p find files
-vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
-
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
@@ -280,9 +275,7 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
-  callback = function()
-    vim.highlight.on_yank { higroup = 'Visual', timeout = 500 }
-  end,
+  callback = function() vim.highlight.on_yank { higroup = 'Visual', timeout = 500 } end,
 })
 
 -- [[ Install `lazy.nvim` plugin manager ]]
@@ -291,9 +284,7 @@ local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
   local out = vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
-  if vim.v.shell_error ~= 0 then
-    error('Error cloning lazy.nvim:\n' .. out)
-  end
+  if vim.v.shell_error ~= 0 then error('Error cloning lazy.nvim:\n' .. out) end
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
@@ -561,9 +552,7 @@ require('lazy').setup({
           --
           -- This may be unwanted, since they displace some of your code
           if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
-            map('<leader>th', function()
-              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
-            end, '[T]oggle Inlay [H]ints')
+            map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, '[T]oggle Inlay [H]ints')
           end
         end,
       })
@@ -575,7 +564,7 @@ require('lazy').setup({
         for type, icon in pairs(signs) do
           diagnostic_signs[vim.diagnostic.severity[type]] = icon
         end
-        vim.diagnostic.config { signs = { text = diagnostic_signs } }
+        vim.diagnostic.config { signs = { text = diagnostic_signs }, underline = true, float = { source = true } }
       end
 
       -- LSP servers and clients are able to communicate to each other what features they support.
@@ -613,6 +602,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
+        ty = {},
         basedpyright = {
           root_markers = { '.git' },
           settings = {
@@ -755,9 +745,7 @@ require('lazy').setup({
     keys = {
       {
         '<F1>',
-        function()
-          require('conform').format { async = true, lsp_format = 'fallback' }
-        end,
+        function() require('conform').format { async = true, lsp_format = 'fallback' } end,
         mode = { 'n', 'i' },
         desc = '[F]ormat buffer',
       },
@@ -862,9 +850,7 @@ require('lazy').setup({
       -- highlight trailing spaces (we do this very lazily so that it won't highligh on snacks dashboard
       vim.api.nvim_create_autocmd('User', {
         pattern = 'VeryLazy',
-        callback = function()
-          require('mini.trailspace').setup()
-        end,
+        callback = function() require('mini.trailspace').setup() end,
       })
 
       -- Git stuff
@@ -879,9 +865,7 @@ require('lazy').setup({
     keys = {
       {
         '<leader>go',
-        function()
-          require('mini.diff').toggle_overlay()
-        end,
+        function() require('mini.diff').toggle_overlay() end,
         mode = { 'n' },
         desc = 'Toggle [g]it [o]verlay',
       },
@@ -892,7 +876,6 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = true,
-        theme = 'catppuccin',
         component_separators = '|',
         section_separators = '',
         disabled_filetypes = {
@@ -919,9 +902,7 @@ require('lazy').setup({
         lualine_b = { 'branch', 'diff', 'diagnostics' },
         lualine_c = {
           'filename',
-          function()
-            return [[neovim (btw)]]
-          end,
+          function() return [[neovim (btw)]] end,
         },
         lualine_x = { 'encoding', 'fileformat', 'filetype' },
         lualine_y = { 'progress' },
