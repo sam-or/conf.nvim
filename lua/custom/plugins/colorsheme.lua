@@ -83,7 +83,7 @@ return {
     init = function()
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
-      vim.cmd.colorscheme 'catppuccin'
+      vim.cmd.colorscheme 'catppuccin-nvim'
     end,
     opts = {
       auto_integratins = true,

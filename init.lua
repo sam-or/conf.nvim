@@ -638,6 +638,7 @@ require('lazy').setup({
         --   },
         --   filetypes = tsserver_filetypes,
         -- },
+        pyrefly = {},
         angularls = {},
         vue_ls = {
           on_init = function(client)
