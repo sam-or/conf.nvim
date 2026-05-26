@@ -8,7 +8,7 @@ return {
       -- Options are not required
       dotnet.setup {
         lsp = {
-          enabled = false, -- Enable builtin roslyn lsp
+          enabled = true, -- Enable builtin roslyn lsp
           roslynator_enabled = true, -- Automatically enable roslynator analyzer
           easy_dotnet_analyzer_enabled = true, -- Enable roslyn analyzer from easy-dotnet-server
           analyzer_assemblies = {}, -- Any additional roslyn analyzers you might use like SonarAnalyzer.CSharp
@@ -75,26 +75,14 @@ return {
         terminal = function(path, action, args)
           args = args or ''
           local commands = {
-            run = function()
-              return string.format('dotnet run --project %s %s', path, args)
-            end,
-            test = function()
-              return string.format('dotnet test %s %s', path, args)
-            end,
-            restore = function()
-              return string.format('dotnet restore %s %s', path, args)
-            end,
-            build = function()
-              return string.format('dotnet build %s %s', path, args)
-            end,
-            watch = function()
-              return string.format('dotnet watch --project %s %s', path, args)
-            end,
+            run = function() return string.format('dotnet run --project %s %s', path, args) end,
+            test = function() return string.format('dotnet test %s %s', path, args) end,
+            restore = function() return string.format('dotnet restore %s %s', path, args) end,
+            build = function() return string.format('dotnet build %s %s', path, args) end,
+            watch = function() return string.format('dotnet watch --project %s %s', path, args) end,
           }
           local command = commands[action]()
-          if require('easy-dotnet.extensions').isWindows() == true then
-            command = command .. '\r'
-          end
+          if require('easy-dotnet.extensions').isWindows() == true then command = command .. '\r' end
           vim.cmd 'vsplit'
           vim.cmd('term ' .. command)
         end,
@@ -126,9 +114,7 @@ return {
             local spinner = require('easy-dotnet.ui-modules.spinner').new()
             spinner:start_spinner(start_event.job.name)
             ---@param finished_event JobEvent
-            return function(finished_event)
-              spinner:stop_spinner(finished_event.result.msg, finished_event.result.level)
-            end
+            return function(finished_event) spinner:stop_spinner(finished_event.result.msg, finished_event.result.level) end
           end,
         },
         diagnostics = {
@@ -147,11 +133,5 @@ return {
       --   dotnet.run_project()
       -- end)
     end,
-  },
-  {
-    'seblyng/roslyn.nvim',
-    ---@module 'roslyn.config'
-    ---@type RoslynNvimConfig
-    opts = {},
   },
 }
