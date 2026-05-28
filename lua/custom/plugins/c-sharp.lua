@@ -4,6 +4,7 @@ return {
     -- are highly recommended for a better experience
     dependencies = { 'nvim-lua/plenary.nvim', 'mfussenegger/nvim-dap', 'folke/snacks.nvim' },
     event = 'Filetype cs',
+    enabled = false,
     config = function()
       local dotnet = require 'easy-dotnet'
       -- Options are not required
